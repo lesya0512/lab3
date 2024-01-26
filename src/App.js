@@ -1,45 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Hermiona from './assets/img/card-img1.png' 
 import Malfoy from './assets/img/Rectangle371.png' 
 import Potter from './assets/img/potter.jpg' 
 import CardList from './components/card-list/cardList';
 import Header from './components/header/header';
+import axios from 'axios';
 
 function App() {
 
   const [schools, setSchool] = useState([
-    {name: "гриффиндор"},
-    {name: "слизерин"},
-    {name: "хаффлпафф"},
-    {name: "рейвенкло"},
   ])
 
   const [cards, setCards] = useState([
-    {img: Hermiona,
-     name: "Hermione Granger", 
-     actor: "Emma Watson", 
-     gender: "female", 
-     house: "Gryffindor", 
-     wandcore: "dragon heartstring", 
-     alive: true},
+  ]);
 
-     {img: Malfoy,
-      name: "Draco Malfoy", 
-      actor: "Tom Felton", 
-      gender: "male", 
-      house: "Slytherin", 
-      wandcore: "unicorn tail-hair", 
-      alive: true}, 
+  useEffect(() => {
+    axios.get('http://localhost:3001/schools').then((data) => {
+      setSchool(data.data)
+    })
 
-      {img: Potter,
-        name: "Harry Potter", 
-        actor: "Daniel Radcliffe", 
-        gender: "male", 
-        house: "Gryffindor", 
-        wandcore: "unicorn tail-hair", 
-        alive: true}
-    ]);
+    axios.get('http://localhost:3001/heroes').then((data) => {
+      setCards(data.data)
+    })
+  }, [])
 
   return (
     <div className="App">
