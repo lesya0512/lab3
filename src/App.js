@@ -11,9 +11,10 @@ function App() {
 
   const [schools, setSchool] = useState([
   ])
+  const [cards, setCards] = useState([]);
+  const [filteredCards, setFilteredCards] = useState(cards);
 
-  const [cards, setCards] = useState([
-  ]);
+ 
 
   useEffect(() => {
     axios.get('http://localhost:3001/schools').then((data) => {
@@ -22,14 +23,15 @@ function App() {
 
     axios.get('http://localhost:3001/heroes').then((data) => {
       setCards(data.data)
+      setFilteredCards(data.data)
     })
   }, [])
 
   return (
     <div className="App">
-      <Header schools={schools}/>
+      <Header schools={schools} setCards={setCards} cards={cards} filteredCards={filteredCards} setFilteredCards={setFilteredCards}/>
       <hr />
-      <CardList cards={cards}/>
+      <CardList cards={filteredCards}/>
     </div>
   );
 }

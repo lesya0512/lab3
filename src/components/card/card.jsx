@@ -6,7 +6,7 @@ function Card({img, name, actor, gender, school, wandcore, alive}) {
             <img src={img} alt="" />
         </div>
         <div className="info">
-            <p className="name">Name: {name}</p>
+            <p className="name">{name}</p>
             <p className="actor">Actor: {actor}</p>
             <p className="gender">Gender: {gender}</p>
             <p className="house">House : {school}</p>

@@ -1,6 +1,49 @@
+import { useEffect, useState } from 'react';
 import './header.scss'
+import axios from 'axios';
+import Card from '../card/card';
 
-function Header({schools}) {
+function Header({schools, setCards, cards, filteredCards, setFilteredCards}) {
+    
+    const [choosedSchool, setChoosedSchool] = useState(0);
+    const [name, setName] = useState('');
+
+    const filterByName = () => {
+        let newCards = [];
+        cards.forEach((card)=>{
+            if(card.name.toLowerCase().includes(name.toLowerCase())){
+                newCards.push(card);
+            }
+        })
+        setFilteredCards(newCards)
+    }
+
+    useEffect(() => {
+        if(name.length > 2) {
+            filterByName()
+        } else {
+            setFilteredCards(cards)
+        }
+    }, [name])
+
+    const handleChoosedSchool = () => {
+        axios.get('http://localhost:3001/heroesFilterBySchool/' + choosedSchool).then((data) => {
+            setFilteredCards(data.data)
+            setCards(data.data);
+        })
+    }
+
+    useEffect(() => {
+       if(choosedSchool > 0){
+           handleChoosedSchool()
+       } else {
+            axios.get('http://localhost:3001/heroes').then((data) => {
+                setCards(data.data)
+                setFilteredCards(data.data)
+          })
+       };
+    }, [choosedSchool])
+
     return <header>
         <div className="container">
 
@@ -11,16 +54,18 @@ function Header({schools}) {
                 <form action="">
                     <div className="name">
                         <label htmlFor="name">Имя</label>
-                        <input type="text" placeholder='Гермиона' id="name"/>
+                        <input type="text" placeholder='Гермиона' id="name" value={name} onChange={(element) => {setName(element.target.value)}}/>
                     </div>
 
                     <div className="school">
                         <label htmlFor="school">Школа</label>
-                        <select id='school'>
-                            <option value="">Choose one</option>
-                                {schools.map((school) => {
-                                    return <option value="0">{school.name}</option>
-                                })}
+                        <select id='school' onChange={(element) => {setChoosedSchool(element.target.value)}}>
+                            <option value="0">Choose one</option>
+                                {
+                                    schools.map((school) => {
+                                        return <option value={school.id}>{school.name}</option>
+                                    })
+                                }
                         </select>
                     </div>
                 </form>
